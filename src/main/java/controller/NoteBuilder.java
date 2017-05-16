@@ -3,7 +3,6 @@ package controller;
 import model.entity.Address;
 import model.entity.Group;
 import model.entity.Note;
-
 import java.util.Date;
 
 /**

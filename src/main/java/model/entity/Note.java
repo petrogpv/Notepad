@@ -1,8 +1,6 @@
 package model.entity;
 
-import controller.Controller;
 import controller.NoteBuilder;
-
 import java.util.Date;
 
 /**

@@ -1,9 +1,6 @@
 import controller.Controller;
 import model.Notepad;
-import model.entity.Note;
 import view.View;
-
-import java.util.List;
 
 /**
  * Created by Администратор on 15.05.2017.

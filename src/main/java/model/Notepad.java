@@ -1,7 +1,6 @@
 package model;
 
 import model.entity.Note;
-
 import java.util.ArrayList;
 import java.util.List;
 
