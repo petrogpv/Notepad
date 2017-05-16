@@ -3,14 +3,10 @@ package controller;
 import model.Notepad;
 import model.entity.Group;
 import model.entity.Note;
-import model.entity.NoteBuilder;
 import view.View;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by Администратор on 15.05.2017.
@@ -124,6 +120,4 @@ public class Controller {
                 return m1.getName().compareTo(m2.getName());
         });
     }
-
-
 }

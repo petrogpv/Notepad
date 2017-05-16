@@ -1,12 +1,13 @@
-package model.entity;
+package controller;
 
-import controller.MethodOrder;
-import model.Notepad;
+import model.entity.Address;
+import model.entity.Group;
+import model.entity.Note;
 
 import java.util.Date;
 
 /**
- * Created by Администратор on 15.05.2017.
+ * Created by Администратор on 16.05.2017.
  */
 public class NoteBuilder {
 
