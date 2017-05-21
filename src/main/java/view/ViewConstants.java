@@ -12,6 +12,7 @@ public interface ViewConstants extends RegexConstants{
             new Locale("en"));
 
     String WRONG_INPUT = resourceBundle.getString("input.wrong");
+    String WRONG_INPUT_NICKNAME = resourceBundle.getString("input.wrong.nickname");
     String INPUT = resourceBundle.getString("input.input");
     String SURNAME = resourceBundle.getString("input.surname");
     String NAME = resourceBundle.getString("input.name");

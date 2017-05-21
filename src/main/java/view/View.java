@@ -20,6 +20,9 @@ public class View implements ViewConstants {
     public  void printWrongInput(){
        printMessage(WRONG_INPUT);
     }
+    public  void printWrongNicknameInput(){
+       printMessage(WRONG_INPUT_NICKNAME);
+    }
     public void printInput(String string){
         System.out.println(INPUT + string);
     }

@@ -9,49 +9,76 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- * Created by Администратор on 15.05.2017.
+ * Controller class
  */
 public class Controller {
     private Notepad notepad;
     private View view;
     private Scanner scanner;
 
+    /**
+     * This constructor creates Controller instance
+     *
+     * @param notepad - sets Notepad instance
+     * @param view - sets View instance
+     */
     public Controller(Notepad notepad, View view) {
         this.notepad = notepad;
         this.view = view;
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * This method is runner
+     */
     public void run(){
 
-        notepad.addNote(createNoteViaIteration());
-        view.printNotepad(notepad);
+//        notepad.addNote(createNoteViaIteration());
+//        view.printNotepad(notepad);
 
+        notepad.addNote(createNoteViaBuilder());
         notepad.addNote(createNoteViaBuilder());
         view.printNotepad(notepad);
 
     }
 
+    /**
+     * This method creates Note instance using
+     * Reflection API
+     * NOTICE: nickname uniqueness check does not work
+     * in this method
+     *
+     * @return new Note instance
+     */
     private Note createNoteViaIteration(){
         NoteBuilder noteBuilder = Note.createNotebuilder();
         Class nbClass = noteBuilder.getClass();
         Method [] methods =  nbClass.getMethods();
         sortMethodsByMethodOrder(methods);
-        int methodIndex = 0;
+        Iterator<Method> iMethod = Arrays.asList(methods).iterator();
+        Iterator<String> iInput = View.inputWithRegex.keySet().iterator();
+
+
         String inputString;
-        for (String inputMessage: View.inputWithRegex.keySet()) {
-            inputString = inputNoteFields(inputMessage);
+        while (iMethod.hasNext() && iInput.hasNext()){
+            inputString = inputNoteFields(iInput.next());
             try {
-                methods[methodIndex].invoke(noteBuilder, inputString);
+                iMethod.next().invoke(noteBuilder, inputString);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
-            methodIndex++;
         }
        return noteBuilder.build();
     }
+    /**
+     * This method creates Note instance using
+     * MoteBuilder
+     * NOTICE: nickname uniqueness check work here
+     *
+     * @return new Note instance
+     */
     private Note createNoteViaBuilder(){
         NoteBuilder noteBuilder = Note.createNotebuilder();
         Iterator<String> iterator = View.inputWithRegex.keySet().iterator();
@@ -59,7 +86,7 @@ public class Controller {
         noteBuilder.addLastName(inputNoteFields(iterator.next()))
                 .addName(inputNoteFields(iterator.next()))
                 .addPatronymic(inputNoteFields(iterator.next()))
-                .addNickname(inputNoteFields(iterator.next()))
+                .addNickname(inputNoteNicknameFields(iterator.next()))
                 .addComment(inputNoteFields(iterator.next()))
                 .addGroup(inputNoteFields(iterator.next()))
                 .addPhoneNumberHome(inputNoteFields(iterator.next()))
@@ -75,6 +102,13 @@ public class Controller {
        return noteBuilder.build();
     }
 
+    /**
+     * This mehtod inputs Note fields using Scanner
+     * and validates them
+     *
+     * @param inputMessage
+     * @return
+     */
     private String inputNoteFields(String inputMessage) {
         String regex = View.inputWithRegex.get(inputMessage);
         if(regex != null){
@@ -87,7 +121,48 @@ public class Controller {
         }
         return inputNoteGroupField(inputMessage);
     }
+    /**
+     * This mehtod inputs nickname Note field using Scanner
+     * and validates it for uniqueness
+     *
+     * @param inputMessage
+     * @return
+     */
+    private String inputNoteNicknameFields(String inputMessage) {
+        String nickname;
 
+        view.printInput(inputMessage);
+        while (true){
+            if(scanner.hasNext()&& checkNickname(nickname = scanner.next())){
+                    return nickname ;
+            } else {
+                view.printWrongNicknameInput();
+            }
+        }
+    }
+
+    /**
+     * This method validates inputted nickname for uniqueness
+     *
+     * @param nickname - inputted String nickname
+     * @return - returns true if nickname is free
+     *              and false if busy
+     */
+    private boolean checkNickname (String nickname){
+        for (Note note: notepad.getNotes()) {
+            if(nickname.equals(note.getNickname())){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * This method validates inputted group with existing Group
+     *
+     * @param inputMessage - inputted String group name
+     * @return
+     */
     private String inputNoteGroupField(String inputMessage) {
         while (true){
             view.printInput(inputMessage);
@@ -103,6 +178,14 @@ public class Controller {
             }
         }
     }
+
+    /**
+     * This method sorts Method [] array received from class
+     * which methods are annotated with @MethodOrder
+     *
+     * @param methods - Method [] array to sort
+     *
+     */
     private void sortMethodsByMethodOrder (Method [] methods ){
         Arrays.sort(methods, (Method m1, Method m2) -> {
                 MethodOrder or1 = m1.getAnnotation(MethodOrder.class);

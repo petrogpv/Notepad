@@ -18,7 +18,7 @@ public interface RegexConstants {
 
     String EMAIL_REGEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
-    String BUILDING_REGEX = "^[0-9]+[-/]?[a-zA-Z]?$";
+    String BUILDING_REGEX = "^[0-9]+(([-\\s]?[a-zA-Z])|([/][0-9]+([-\\s]?[a-zA-Z])?))?$";
 
     String APARTMENT_REGEX = "^[0-9]+$";
 
