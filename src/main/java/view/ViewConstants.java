@@ -1,11 +1,13 @@
 package view;
 
+import model.RegexConstants;
+
 import java.util.*;
 
 /**
  * Created by Администратор on 15.05.2017.
  */
-public interface ViewConstants extends RegexConstants{
+public interface ViewConstants extends RegexConstants {
     String MESSAGES_BUNDLE_NAME = "messages";
     ResourceBundle resourceBundle = ResourceBundle.getBundle(MESSAGES_BUNDLE_NAME,
 //            new Locale("ua"));

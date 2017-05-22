@@ -7,8 +7,8 @@ import java.util.List;
 /**
  * Created by Администратор on 15.05.2017.
  */
-public class Notepad {
-    private List<Note> notes;
+public final class Notepad {
+    private final List<Note> notes;
     private static Notepad notepad;
     private int nextID = 1;
 

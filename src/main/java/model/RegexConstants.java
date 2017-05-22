@@ -1,4 +1,4 @@
-package view;
+package model;
 
 /**
  * Created by Администратор on 15.05.2017.

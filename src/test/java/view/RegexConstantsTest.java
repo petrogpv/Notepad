@@ -1,10 +1,7 @@
 package view;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
-import org.junit.BeforeClass;
+import model.RegexConstants;
 import org.junit.Test;
-
-import java.lang.annotation.Target;
 
 import static org.junit.Assert.*;
 
