@@ -1,5 +1,6 @@
 package controller;
 
+import model.NicknameException;
 import model.Notepad;
 import model.entity.Group;
 import model.entity.Note;
@@ -19,8 +20,8 @@ public class Controller {
     /**
      * This constructor creates Controller instance
      *
-     * @param notepad - sets Notepad instance
-     * @param view - sets View instance
+     * @param notepad Notepad - sets Notepad instance
+     * @param view View - sets View instance
      */
     public Controller(Notepad notepad, View view) {
         this.notepad = notepad;
@@ -48,7 +49,7 @@ public class Controller {
      * NOTICE: nickname uniqueness check does not work
      * in this method
      *
-     * @return new Note instance
+     * @return Note - new Note instance
      */
     private Note createNoteViaIteration(){
         NoteBuilder noteBuilder = Note.createNotebuilder();
@@ -77,7 +78,7 @@ public class Controller {
      * MoteBuilder
      * NOTICE: nickname uniqueness check work here
      *
-     * @return new Note instance
+     * @return Note - new Note instance
      */
     private Note createNoteViaBuilder(){
         NoteBuilder noteBuilder = Note.createNotebuilder();
@@ -103,11 +104,11 @@ public class Controller {
     }
 
     /**
-     * This mehtod inputs Note fields using Scanner
+     * This method inputs Note fields using Scanner
      * and validates them
      *
-     * @param inputMessage
-     * @return
+     * @param inputMessage String - label for field input
+     * @return String - validated string
      */
     private String inputNoteFields(String inputMessage) {
         String regex = View.inputWithRegex.get(inputMessage);
@@ -122,20 +123,25 @@ public class Controller {
         return inputNoteGroupField(inputMessage);
     }
     /**
-     * This mehtod inputs nickname Note field using Scanner
+     * This method inputs nickname Note field using Scanner
      * and validates it for uniqueness
      *
-     * @param inputMessage
-     * @return
+     * @param inputMessage String - label for nickname input
+     * @return String - validated nickname
      */
     private String inputNoteNicknameFields(String inputMessage) {
-        String nickname;
+        String nickname = "";
 
         view.printInput(inputMessage);
         while (true){
             if(scanner.hasNext()&& checkNickname(nickname = scanner.next())){
                     return nickname ;
             } else {
+                try {
+                    throw new NicknameException(nickname);
+                }catch (NicknameException e){
+                    e.printStackTrace();
+                }
                 view.printWrongNicknameInput();
             }
         }
@@ -144,9 +150,9 @@ public class Controller {
     /**
      * This method validates inputted nickname for uniqueness
      *
-     * @param nickname - inputted String nickname
-     * @return - returns true if nickname is free
-     *              and false if busy
+     * @param nickname String - inputted nickname
+     * @return boolean - true if nickname is free
+     *              and false if occupied
      */
     private boolean checkNickname (String nickname){
         for (Note note: notepad.getNotes()) {
@@ -160,8 +166,8 @@ public class Controller {
     /**
      * This method validates inputted group with existing Group
      *
-     * @param inputMessage - inputted String group name
-     * @return
+     * @param inputMessage String - label for group name input
+     * @return String - regex validated string
      */
     private String inputNoteGroupField(String inputMessage) {
         while (true){
@@ -183,7 +189,7 @@ public class Controller {
      * This method sorts Method [] array received from class
      * which methods are annotated with @MethodOrder
      *
-     * @param methods - Method [] array to sort
+     * @param methods Method [] - array to sort
      *
      */
     private void sortMethodsByMethodOrder (Method [] methods ){
