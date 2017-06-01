@@ -2,6 +2,7 @@ package model;
 
 import model.entity.Note;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ public final class Notepad {
     }
 
     public List<Note> getNotes(){
-        return notes;
+        return Collections.unmodifiableList(notes);
     }
 
 
