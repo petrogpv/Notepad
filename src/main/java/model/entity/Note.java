@@ -23,9 +23,10 @@ public class Note {
     private Address address;
     private Date dateCreated;
     private Date dateChanged;
+    private Note(){}
 
     public static NoteBuilder createNotebuilder (){
-        return new NoteBuilder();
+        return new NoteBuilder(new Note());
     }
 
     public int getNoteId() {

@@ -14,8 +14,12 @@ public class NoteBuilder {
     public static final String DOT_SIGN = ".";
     public static final String EMPTY_STRING = "";
     public static final int ZERO = 0;
-    private Note note = new Note();
+    private Note note;
     private Address address = new Address();
+
+    public NoteBuilder(Note note) {
+        this.note = note;
+    }
 
 
     @MethodOrder(order = 1)

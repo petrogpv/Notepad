@@ -5,9 +5,12 @@ import model.Notepad;
 import model.entity.Group;
 import model.entity.Note;
 import view.View;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Scanner;
 
 /**
  * Controller class
@@ -21,7 +24,7 @@ public class Controller {
      * This constructor creates Controller instance
      *
      * @param notepad Notepad - sets Notepad instance
-     * @param view View - sets View instance
+     * @param view    View - sets View instance
      */
     public Controller(Notepad notepad, View view) {
         this.notepad = notepad;
@@ -32,7 +35,7 @@ public class Controller {
     /**
      * This method is runner
      */
-    public void run(){
+    public void run() {
 
 //        notepad.addNote(createNoteViaIteration());
 //        view.printNotepad(notepad);
@@ -51,17 +54,17 @@ public class Controller {
      *
      * @return Note - new Note instance
      */
-    private Note createNoteViaIteration(){
+    private Note createNoteViaIteration() {
         NoteBuilder noteBuilder = Note.createNotebuilder();
         Class nbClass = noteBuilder.getClass();
-        Method [] methods =  nbClass.getMethods();
+        Method[] methods = nbClass.getMethods();
         sortMethodsByMethodOrder(methods);
         Iterator<Method> iMethod = Arrays.asList(methods).iterator();
         Iterator<String> iInput = View.inputWithRegex.keySet().iterator();
 
 
         String inputString;
-        while (iMethod.hasNext() && iInput.hasNext()){
+        while (iMethod.hasNext() && iInput.hasNext()) {
             inputString = inputNoteFields(iInput.next());
             try {
                 iMethod.next().invoke(noteBuilder, inputString);
@@ -71,8 +74,9 @@ public class Controller {
                 e.printStackTrace();
             }
         }
-       return noteBuilder.build();
+        return noteBuilder.build();
     }
+
     /**
      * This method creates Note instance using
      * MoteBuilder
@@ -80,7 +84,7 @@ public class Controller {
      *
      * @return Note - new Note instance
      */
-    private Note createNoteViaBuilder(){
+    private Note createNoteViaBuilder() {
         NoteBuilder noteBuilder = Note.createNotebuilder();
         Iterator<String> iterator = View.inputWithRegex.keySet().iterator();
 
@@ -100,7 +104,7 @@ public class Controller {
                 .addStreet(inputNoteFields(iterator.next()))
                 .addBuildingNumber(inputNoteFields(iterator.next()))
                 .addApartmentNumber(inputNoteFields(iterator.next()));
-       return noteBuilder.build();
+        return noteBuilder.build();
     }
 
     /**
@@ -112,16 +116,17 @@ public class Controller {
      */
     private String inputNoteFields(String inputMessage) {
         String regex = View.inputWithRegex.get(inputMessage);
-        if(regex != null){
+        if (regex != null) {
             String res;
             view.printInput(inputMessage);
-            while (!(scanner.hasNext()&&(res = scanner.next()).matches(regex))){
+            while (!(scanner.hasNext() && (res = scanner.next()).matches(regex))) {
                 view.printWrongInput();
             }
             return res;
         }
         return inputNoteGroupField(inputMessage);
     }
+
     /**
      * This method inputs nickname Note field using Scanner
      * and validates it for uniqueness
@@ -133,13 +138,13 @@ public class Controller {
         String nickname = "";
 
         view.printInput(inputMessage);
-        while (true){
-            if(scanner.hasNext()&& checkNickname(nickname = scanner.next())){
-                    return nickname ;
+        while (true) {
+            if (scanner.hasNext() && checkNickname(nickname = scanner.next())) {
+                return nickname;
             } else {
                 try {
                     throw new NicknameException(nickname);
-                }catch (NicknameException e){
+                } catch (NicknameException e) {
                     e.printStackTrace();
                 }
                 view.printWrongNicknameInput();
@@ -152,11 +157,11 @@ public class Controller {
      *
      * @param nickname String - inputted nickname
      * @return boolean - true if nickname is free
-     *              and false if occupied
+     * and false if occupied
      */
-    private boolean checkNickname (String nickname){
-        for (Note note: notepad.getNotes()) {
-            if(nickname.equals(note.getNickname())){
+    private boolean checkNickname(String nickname) {
+        for (Note note : notepad.getNotes()) {
+            if (nickname.equals(note.getNickname())) {
                 return false;
             }
         }
@@ -170,12 +175,12 @@ public class Controller {
      * @return String - regex validated string
      */
     private String inputNoteGroupField(String inputMessage) {
-        while (true){
+        while (true) {
             view.printInput(inputMessage);
-            if(scanner.hasNext()){
+            if (scanner.hasNext()) {
                 try {
                     return Group.valueOf(scanner.next()).name();
-                } catch (IllegalArgumentException ex){
+                } catch (IllegalArgumentException ex) {
                     view.printWrongInput();
                     view.printAllGroup();
                 }
@@ -190,23 +195,20 @@ public class Controller {
      * which methods are annotated with @MethodOrder
      *
      * @param methods Method [] - array to sort
-     *
      */
-    private void sortMethodsByMethodOrder (Method [] methods ){
+    private void sortMethodsByMethodOrder(Method[] methods) {
         Arrays.sort(methods, (Method m1, Method m2) -> {
-                MethodOrder or1 = m1.getAnnotation(MethodOrder.class);
-                MethodOrder or2 = m2.getAnnotation(MethodOrder.class);
-                // nulls last
-                if (or1 != null && or2 != null) {
-                    return or1.order() - or2.order();
-                } else
-                if (or1 != null && or2 == null) {
-                    return -1;
-                } else
-                if (or1 == null && or2 != null) {
-                    return 1;
-                }
-                return m1.getName().compareTo(m2.getName());
+            MethodOrder or1 = m1.getAnnotation(MethodOrder.class);
+            MethodOrder or2 = m2.getAnnotation(MethodOrder.class);
+            // nulls last
+            if (or1 != null && or2 != null) {
+                return or1.order() - or2.order();
+            } else if (or1 != null && or2 == null) {
+                return -1;
+            } else if (or1 == null && or2 != null) {
+                return 1;
+            }
+            return m1.getName().compareTo(m2.getName());
         });
     }
 }
